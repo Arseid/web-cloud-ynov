@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies and predeploy
         run: |
           npm i
-          npm predeploy
+          npm run predeploy
       - name: Setup pages
         id: pages
         uses: actions/configure-pages@v3
