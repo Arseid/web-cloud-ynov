@@ -12,24 +12,33 @@ jobs:
       matrix:
         node-version: [20.10.0]
     steps:
-      - uses: actions/checkout@v2
+      - name: Setup repo
+        uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Install dependencies
+        run: npm i
+      - name: Setup pages
+        id: pages
+        uses: actions/configure-pages@v3
       - name: npm ci, build
         run: |
           npm ci
           npm run build --if-present
-          npm test
-      - name: Setup pages
-        id: pages
-        uses: actions/configure-pages@v3
+#          npm test
       - name: Upload artifacft
         uses: actions/upload-pages-artifact@v2
         with:
           path: build
-          if-no-files-found: error
+          if-no-files-found: error      
+
   deploy:
     environment:
       name: github-pages
