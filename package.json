@@ -23,5 +23,6 @@
   "devDependencies": {
     "@babel/core": "^7.20.0"
   },
-  "private": true
+  "private": true,
+  "homepage": "https://arseid.github.io/web-cloud-ynov/"
 }
