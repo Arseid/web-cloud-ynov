@@ -28,15 +28,14 @@ jobs:
       - name: Setup pages
         id: pages
         uses: actions/configure-pages@v3
-      - name: npm ci, build
+      - name: npm deploy
         run: |
           npm ci
-          npm run build --if-present
-#          npm test
+          npm run deploy
       - name: Upload artifacft
         uses: actions/upload-pages-artifact@v2
         with:
-          path: build
+          path: dist
           if-no-files-found: error      
 
   deploy:
