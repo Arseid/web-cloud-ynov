@@ -23,16 +23,14 @@ jobs:
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
-      - name: Install dependencies
-        run: npm i
+      - name: Install dependencies and predeploy
+        run: |
+          npm i
+          npm predeploy
       - name: Setup pages
         id: pages
         uses: actions/configure-pages@v3
-      - name: npm deploy
-        run: |
-          npm ci
-          npm run deploy
-      - name: Upload artifacft
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
           path: dist
