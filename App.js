@@ -3,6 +3,7 @@ import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import {signup} from "./firebase/auth_signup_password";
 import {signin} from "./firebase/auth_signin_password";
 import {signinWithPhoneNumber} from "./firebase/auth_phone_signin";
+import {signinWithGithub} from "./firebase/auth_github_signin_popup";
 import {useState} from "react";
 
 export default function App() {
@@ -78,6 +79,7 @@ export default function App() {
             value={phoneNumber}
         />
         <Button title="Sign In with Phone Number" onPress={handleSigninWithPhoneNumber}/>
+        <Button title="Sign In with Github" onPress={signinWithGithub}/>
       <StatusBar style="auto" />
     </View>
   );
