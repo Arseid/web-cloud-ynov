@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import {signup} from "./firebase/auth_signup_password";
+import {signin} from "./firebase/auth_signin_password";
 import {useState} from "react";
 
 export default function App() {
@@ -9,19 +10,20 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text>Email</Text>
-      <TextInput
-        style={styles.input}
-        onChangeText={text => setEmail(text)}
-        value={email}
-      />
-      <Text>Password</Text>
+        <Text>Email</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={text => setEmail(text)}
+          value={email}
+        />
+        <Text>Password</Text>
         <TextInput
             style={styles.input}
             onChangeText={text => setPassword(text)}
             value={password}
         />
         <Button onClick={() => signup(email, password)} title="Sign Up!"/>
+        <Button onClick={() => signin(email, password)} title="Sign In!"/>
       <StatusBar style="auto" />
     </View>
   );
