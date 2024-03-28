@@ -1,5 +1,5 @@
-import "./firebaseConfig";
-import {getAuth, createWithEmailAndPassword} from "firebase/app";
+import "../firebaseConfig";
+import { getAuth, createWithEmailAndPassword } from "firebase/app";
 
 const auth = getAuth();
 export const signup = (email, password) => {
