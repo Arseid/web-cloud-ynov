@@ -24,6 +24,7 @@ export default function App() {
   const handleSignup = () => {
     if (validateForm(email, password)) {
       signup(email, password);
+      alert("User created successfully")
     } else {
       alert("Invalid email or password");
     }
@@ -31,9 +32,10 @@ export default function App() {
 
   const handleSignin = () => {
     if (validateForm(email, password)) {
-      signin(email, password);
+        signin(email, password);
+        alert("User signed in successfully")
     } else {
-      alert("Invalid email or password");
+        alert("Invalid email or password");
     }
   }
 
