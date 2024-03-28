@@ -22,6 +22,11 @@ export default function App() {
         return validateEmail(email) && validatePassword(password);
     }
 
+    const validatePhoneNumber = (phoneNumber) => {
+        const regex = /^\+[1-9]\d{1,14}$/;
+        return regex.test(phoneNumber);
+    }
+
     const handleSignup = () => {
         if (validateForm(email, password)) {
             signup(email, password);
@@ -37,6 +42,15 @@ export default function App() {
             alert("User signed in successfully")
         } else {
             alert("Invalid email or password");
+        }
+  }
+
+  const handleSigninWithPhoneNumber = () => {
+        if (validatePhoneNumber(phoneNumber)) {
+            signinWithPhoneNumber(phoneNumber);
+            alert("User signed in successfully")
+        } else {
+            alert("Invalid phone number");
         }
   }
 
@@ -61,8 +75,9 @@ export default function App() {
         <TextInput
             style={styles.input}
             onChangeText={text => setPhoneNumber(text)}
+            value={phoneNumber}
         />
-        <Button title="Sign In with Phone Number" onPress={() => signinWithPhoneNumber(phoneNumber)}/>
+        <Button title="Sign In with Phone Number" onPress={handleSigninWithPhoneNumber}/>
       <StatusBar style="auto" />
     </View>
   );
