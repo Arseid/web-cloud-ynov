@@ -6,7 +6,36 @@ import {useState} from "react";
 
 export default function App() {
   const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+  const [password, setPassword] = useState('')
+
+  const validateEmail = (email) => {
+    const regex = /\S+@\S+\.\S+/;
+    return regex.test(email);
+  };
+
+  const validatePassword = (password) => {
+    return password.length >= 6;
+  };
+
+  const validateForm = (email, password) => {
+    return validateEmail(email) && validatePassword(password);
+  }
+
+  const handleSignup = () => {
+    if (validateForm(email, password)) {
+      signup(email, password);
+    } else {
+      alert("Invalid email or password");
+    }
+  }
+
+  const handleSignin = () => {
+    if (validateForm(email, password)) {
+      signin(email, password);
+    } else {
+      alert("Invalid email or password");
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -22,8 +51,8 @@ export default function App() {
             onChangeText={text => setPassword(text)}
             value={password}
         />
-        <Button onClick={() => signup(email, password)} title="Sign Up!"/>
-        <Button onClick={() => signin(email, password)} title="Sign In!"/>
+        <Button onClick={handleSignup} title="Sign Up!"/>
+        <Button onClick={handleSignin} title="Sign In!"/>
       <StatusBar style="auto" />
     </View>
   );
