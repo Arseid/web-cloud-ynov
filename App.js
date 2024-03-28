@@ -51,8 +51,8 @@ export default function App() {
             onChangeText={text => setPassword(text)}
             value={password}
         />
-        <Button onClick={handleSignup} title="Sign Up!"/>
-        <Button onClick={handleSignin} title="Sign In!"/>
+        <Button onPress={handleSignup} title="Sign Up!"/>
+        <Button onPress={handleSignin} title="Sign In!"/>
       <StatusBar style="auto" />
     </View>
   );
