@@ -2,14 +2,17 @@ import { StatusBar } from 'expo-status-bar';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 import {signup} from "./firebase/auth_signup_password";
 import {signin} from "./firebase/auth_signin_password";
-import {signinWithPhoneNumber} from "./firebase/auth_phone_signin";
+import {loginWithPhoneNumber} from "./firebase/auth_phone_signin";
 import {signinWithGithub} from "./firebase/auth_github_signin_popup";
 import {useState} from "react";
+import {verifyCode} from "./firebase/auth_phone_verify_code";
 
 export default function App() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [phoneNumber, setPhoneNumber] = useState('')
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [code, onChangeCode] = useState("");
+
     const validateEmail = (email) => {
         const regex = /\S+@\S+\.\S+/;
         return regex.test(email);
@@ -48,7 +51,7 @@ export default function App() {
 
   const handleSigninWithPhoneNumber = () => {
         if (validatePhoneNumber(phoneNumber)) {
-            signinWithPhoneNumber(phoneNumber);
+            loginWithPhoneNumber(phoneNumber);
             alert("User signed in successfully")
         } else {
             alert("Invalid phone number");
@@ -79,6 +82,14 @@ export default function App() {
             value={phoneNumber}
         />
         <Button title="Sign In with Phone Number" onPress={handleSigninWithPhoneNumber}/>
+        <div id="recaptcha-container"></div>
+        <Text>Code</Text>
+        <TextInput
+            style={styles.input}
+            onChangeText={onChangeCode}
+            value={code}
+        ></TextInput>
+        <Button onPress={() => verifyCode(code)} style = {styles.button} title="Check Code!"/>
         <Button title="Sign In with Github" onPress={signinWithGithub}/>
       <StatusBar style="auto" />
     </View>
