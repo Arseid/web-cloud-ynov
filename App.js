@@ -52,7 +52,6 @@ export default function App() {
   const handleSigninWithPhoneNumber = () => {
         if (validatePhoneNumber(phoneNumber)) {
             loginWithPhoneNumber(phoneNumber);
-            alert("User signed in successfully")
         } else {
             alert("Invalid phone number");
         }
