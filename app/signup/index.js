@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
-import { signup } from "../firebase/auth_signup_password";
+import { signup } from "../../firebase/auth_signup_password";
 import { Link } from 'expo-router';
 
 const Signup = () => {

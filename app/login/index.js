@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
-import { signin } from "../firebase/auth_signin_password";
-import { loginWithPhoneNumber } from "../firebase/auth_phone_signin";
-import { verifyCode } from "../firebase/auth_phone_verify_code";
-import { signinWithGithub } from "../firebase/auth_github_signin_popup";
+import { signin } from "../../firebase/auth_signin_password";
+import { loginWithPhoneNumber } from "../../firebase/auth_phone_signin";
+import { verifyCode } from "../../firebase/auth_phone_verify_code";
+import { signinWithGithub } from "../../firebase/auth_github_signin_popup";
 import { Link } from 'expo-router';
 
 const Login = () => {
