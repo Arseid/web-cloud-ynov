@@ -1,11 +1,23 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
 import { signup } from "../../firebase/auth_signup_password";
-import { Link } from 'expo-router';
+import {Link, router} from 'expo-router';
+import {getAuth, onAuthStateChanged} from "firebase/auth";
 
 const Signup = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const auth = getAuth();
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                router.navigate('/profile');
+            }
+        });
+        return () => unsubscribe();
+    }, []);
 
     const validateEmail = (email) => {
         const regex = /\S+@\S+\.\S+/;

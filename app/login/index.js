@@ -1,16 +1,28 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
 import { signin } from "../../firebase/auth_signin_password";
 import { loginWithPhoneNumber } from "../../firebase/auth_phone_signin";
 import { verifyCode } from "../../firebase/auth_phone_verify_code";
 import { signinWithGithub } from "../../firebase/auth_github_signin_popup";
-import { Link } from 'expo-router';
+import {Link, router} from 'expo-router';
+import {getAuth, onAuthStateChanged } from "firebase/auth";
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [code, setCode] = useState('');
+
+    const auth = getAuth();
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                router.navigate('/profile');
+             }
+        });
+        return () => unsubscribe();
+    }, []);
 
     const validateEmail = (email) => {
         const regex = /\S+@\S+\.\S+/;
