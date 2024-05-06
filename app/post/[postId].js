@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "../../firebaseConfig"
-import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
+import { Text, View, TextInput, Pressable } from "react-native";
 import { useLocalSearchParams } from 'expo-router';
 import { getOnePostData } from "../../firebase/get_one_post_data";
 import { getCommentsPost} from "../../firebase/get_comments_post";
 import { createComment } from "../../firebase/add_comment_data";
 import {getAuth} from "firebase/auth";
+import styles from "./styles";
 
 export default function Post() {
     const auth = getAuth();
@@ -35,8 +36,8 @@ export default function Post() {
         <View style={styles.container}>
             {post && (
                 <>
-                    <Text>Title : {post.title}</Text>
-                    <Text>Text : {post.text}</Text>
+                    <Text style={styles.title}>{post.title}</Text>
+                    <Text style={styles.text}>{post.text}</Text>
                     {user && (
                         <>
                             <TextInput
@@ -44,21 +45,21 @@ export default function Post() {
                                 value={newComment}
                                 onChangeText={setNewComment}
                                 placeholder="Add a comment"
+                                multiline
                             />
                             <Pressable onPress={handleCreateComment} style={styles.button}>
-                                <Text style={{color: 'white'}}>Post Comment</Text>
+                                <Text style={styles.buttonLabel}>Post Comment</Text>
                             </Pressable>
                         </>
                     )}
-                    <Text>Comments:</Text>
+                    <Text style={styles.commentsHeader}>Comments:</Text>
                     {comments.map((comment, index) => (
                         <View key={index} style={styles.comment}>
-                            <Text>{comment.text}</Text>
-                            <Text>By: {comment.createdBy}</Text>
-                            <Text>Date: {comment.date.toDate().toLocaleString()}</Text>
+                            <Text style={styles.commentText}>{comment.text}</Text>
+                            <Text style={styles.commentDetails}>By: {comment.createdBy}</Text>
+                            <Text style={styles.commentDetails}>Date: {comment.date.toDate().toLocaleString()}</Text>
                         </View>
                     ))}
-
                 </>
             )}
         </View>
@@ -66,30 +67,3 @@ export default function Post() {
 
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    input: {
-        height: 40,
-        width: 200,
-        margin: 12,
-        borderWidth: 1,
-        padding: 10
-    },
-    button: {
-        backgroundColor: 'blue',
-        minWidth: 100,
-        minHeight: 50,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    buttonLabel: {
-        color: 'white',
-        fontWeight: 700
-    }
-});

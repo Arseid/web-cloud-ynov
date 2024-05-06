@@ -8,8 +8,8 @@ export default function Error403() {
         <NavigationContainer independent={true}>
             <View style={styles.container}>
                 <Text>Seuls les utilisateurs connectés peuvent accéder à cette page</Text>
-                <Link href="signin">Inscription</Link>
-                <Link href="signup">Connexion</Link>
+                <Link href="signup">Inscription</Link>
+                <Link href="signin">Connexion</Link>
             </View>
         </NavigationContainer>
     );

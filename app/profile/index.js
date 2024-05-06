@@ -1,9 +1,10 @@
 import React, {useEffect} from "react";
-import {StyleSheet, Text, View, Image, Pressable, TextInput} from "react-native";
+import { Text, View, Image, Pressable, TextInput} from "react-native";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import * as ImagePicker from 'expo-image-picker';
 import { uploadToFirebase } from "../../firebase/storage_upload_file";
 import { updateProfileInfo } from "../../firebase/auth_update_profile_info";
+import styles from "./styles";
 
 export default function Profile() {
     const auth = getAuth();
@@ -13,7 +14,6 @@ export default function Profile() {
     const [fileName, setFileName] = React.useState("");
 
     const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
@@ -31,14 +31,9 @@ export default function Profile() {
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in, see docs for a list of available properties
-                // https://firebase.google.com/docs/reference/js/auth.user
                 console.log(user)
                 setUser(user);
-                // ...
             } else {
-                // User is signed out
-                // ...
                 setUser(null);
             }
         });
@@ -54,31 +49,31 @@ export default function Profile() {
         <>
             {user ?
                 <View style={styles.container}>
-                    <Text>Display name : {user.displayName}</Text>
-                    <Text>Email : {user.email}</Text>
-                    <Text>phoneNumber : {user.phoneNumber}</Text>
-                    <Text>Profile picture :</Text>
-                    <Image
-                        style={styles.image}
-                        source={{
-                            uri: user.photoURL,
-                        }}
-                    />
+                    <View style={styles.profileSection}>
+                        <Text style={styles.profileText}>Display name: {user.displayName}</Text>
+                        <Text style={styles.profileText}>Email: {user.email}</Text>
+                        <Text style={styles.profileText}>Phone number: {user.phoneNumber}</Text>
+                        <Text style={styles.profileText}>Profile picture:</Text>
+                        <Image
+                            style={styles.image}
+                            source={{ uri: user.photoURL }}
+                        />
+                    </View>
 
-                    <View style={{borderTopWidth: 1, borderTopColor: "black", margin: "20px", padding: "20px"}}>
-                        <Text>Modify display name :</Text>
+                    <View style={styles.modifySection}>
+                        <Text style={styles.modifyText}>Modify display name:</Text>
                         <TextInput
                             style={styles.input}
                             onChangeText={onChangeUsername}
                             value={username}
                         />
-                        <Text>Update profile picture :</Text>
+                        <Text style={styles.modifyText}>Update profile picture:</Text>
                         <Pressable onPress={pickImage} style={styles.button}>
-                            <Text style={{color: 'white'}}>Pick an image from camera roll</Text>
+                            <Text style={styles.buttonLabel}>Pick an image from camera roll</Text>
                         </Pressable>
                         {image && <Image source={{ uri: image }} style={styles.image} />}
                         <Pressable onPress={handleUpdateProfile} style={styles.button}>
-                            <Text style={{color: 'white'}}>Update profile</Text>
+                            <Text style={styles.buttonLabel}>Update profile</Text>
                         </Pressable>
                     </View>
                 </View>
@@ -90,35 +85,3 @@ export default function Profile() {
 
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    input: {
-        height: 40,
-        width: 200,
-        margin: 12,
-        borderWidth: 1,
-        padding: 10
-    },
-    button: {
-        backgroundColor: 'blue',
-        minWidth: 100,
-        minHeight: 50,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    buttonLabel: {
-        color: 'white',
-        fontWeight: 700
-    },
-    image: {
-        width: 200,
-        height: 200,
-    },
-});

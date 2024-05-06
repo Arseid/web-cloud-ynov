@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
-import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
+import { Text, View, TextInput, Pressable } from "react-native";
 import { signin } from "../../firebase/auth_signin_password";
 import { signinWithGithub } from "../../firebase/auth_github_signin_popup";
 import { loginWithPhoneNumber } from "../../firebase/auth_phone_signin";
 import { verifyCode } from "../../firebase/auth_phone_verify_code";
 import {getAuth, onAuthStateChanged} from "firebase/auth";
 import {router} from "expo-router";
+import styles from "./styles";
 
 export default function Signin() {
     const auth = getAuth();
@@ -63,75 +64,45 @@ export default function Signin() {
 
     return (
         <View style={styles.container}>
-            <Text>Email</Text>
+            <Text style={styles.label}>Email</Text>
             <TextInput
                 style={styles.input}
                 onChangeText={onChangeEmail}
                 value={email}
-            ></TextInput>
-            <Text>Password</Text>
+            />
+            <Text style={styles.label}>Password</Text>
             <TextInput
                 style={styles.input}
                 onChangeText={onChangePassword}
                 value={password}
                 secureTextEntry={true}
-            ></TextInput>
-            <Pressable onPress={handleSignin} style = {styles.button}>
-                <Text style={{color: 'white'}}>Sign In!"</Text>
+            />
+            <Pressable onPress={handleSignin} style={styles.button}>
+                <Text style={styles.buttonLabel}>Sign In</Text>
             </Pressable>
-            <Text>____Github_____</Text>
-            <Pressable onPress={() => signinWithGithub()} style = {styles.button}>
-                <Text style={{color: 'white'}}>Sign In with Github</Text>
+            <Text style={styles.sectionDivider}>____Github_____</Text>
+            <Pressable onPress={() => signinWithGithub()} style={styles.button}>
+                <Text style={styles.buttonLabel}>Sign In with Github</Text>
             </Pressable>
-            <Text>____Phone_____</Text>
-            <Text>Phone number</Text>
+            <Text style={styles.sectionDivider}>____Phone_____</Text>
+            <Text style={styles.label}>Phone number</Text>
             <TextInput
                 style={styles.input}
                 onChangeText={onChangePhoneNumber}
                 value={phoneNumber}
-            ></TextInput>
-            <Pressable id="sign-in-button-phone" onPress={handleSigninPhone} style = {styles.button}>
-                <Text style={{color: 'white'}}>Sign In with Phone</Text>
+            />
+            <Pressable onPress={handleSigninPhone} style={styles.button}>
+                <Text style={styles.buttonLabel}>Sign In with Phone</Text>
             </Pressable>
-            <div id="recaptcha-container"></div>
-            <Text>Code</Text>
+            <Text style={styles.label}>Code</Text>
             <TextInput
                 style={styles.input}
                 onChangeText={onChangeCode}
                 value={code}
-            ></TextInput>
-            <Pressable onPress={handlePhoneCode} style = {styles.button}>
-                <Text style={{color: 'white'}}>Check Code !</Text>
+            />
+            <Pressable onPress={handlePhoneCode} style={styles.button}>
+                <Text style={styles.buttonLabel}>Verify Code</Text>
             </Pressable>
-
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    input: {
-        height: 40,
-        width: 200,
-        margin: 12,
-        borderWidth: 1,
-        padding: 10
-    },
-    button: {
-        backgroundColor: 'blue',
-        minWidth: 100,
-        minHeight: 50,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    buttonLabel: {
-        color: 'white',
-        fontWeight: 700
-    }
-});

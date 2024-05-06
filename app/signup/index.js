@@ -1,14 +1,13 @@
-import React, {useEffect} from "react";
-import { StyleSheet, Text, View, TextInput, Image, Pressable } from "react-native";
+import React from "react";
+import { Text, View, TextInput, Image, Pressable } from "react-native";
 import { signup } from "../../firebase/auth_signup_password";
 import * as ImagePicker from "expo-image-picker";
-import {getAuth, onAuthStateChanged, updateProfile} from "firebase/auth";
 import {router} from "expo-router";
 import {uploadToFirebase} from "../../firebase/storage_upload_file";
 import {updateProfileInfo} from "../../firebase/auth_update_profile_info";
+import styles from "./styles";
 
 export default function Signup() {
-    const auth = getAuth();
     const [email, onChangeEmail] = React.useState("");
     const [password, onChangePassword] = React.useState("");
     const [username, onChangeUsername] = React.useState("");
@@ -62,61 +61,33 @@ export default function Signup() {
 
     return (
         <View style={styles.container}>
-            <Text>Email</Text>
+            <Text style={styles.label}>Email</Text>
             <TextInput
                 style={styles.input}
                 onChangeText={onChangeEmail}
                 value={email}
             />
-            <Text>Password</Text>
+            <Text style={styles.label}>Password</Text>
             <TextInput
                 style={styles.input}
                 onChangeText={onChangePassword}
                 value={password}
                 secureTextEntry={true}
             />
-            <Text>Username</Text>
+            <Text style={styles.label}>Username</Text>
             <TextInput
                 style={styles.input}
                 onChangeText={onChangeUsername}
                 value={username}
             />
-            <Text>Profile picture (optional)</Text>
+            <Text style={styles.label}>Profile picture (optional)</Text>
             <Pressable onPress={pickImage} style={styles.button}>
-                <Text style={{color: 'white'}}>Choose Image</Text>
+                <Text style={styles.buttonLabel}>Choose Image</Text>
             </Pressable>
-            {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-            <Pressable onPress={handleSignup} style = {styles.button}>
-                <Text style={{color: 'white'}}>Sign Up!</Text>
+            {image && <Image source={{ uri: image }} style={styles.image} />}
+            <Pressable onPress={handleSignup} style={styles.button}>
+                <Text style={styles.buttonLabel}>Sign Up!</Text>
             </Pressable>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    input: {
-        height: 40,
-        width: 200,
-        margin: 12,
-        borderWidth: 1,
-        padding: 10
-    },
-    button: {
-        backgroundColor: 'blue',
-        minWidth: 100,
-        minHeight: 50,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    buttonLabel: {
-        color: 'white',
-        fontWeight: 700
-    }
-});
