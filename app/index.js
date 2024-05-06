@@ -7,13 +7,13 @@ import styles from "./styles";
 
 export default function Home() {
     const [posts, setPosts] = useState([])
-    useEffect(async () => {
+    useEffect(() => {
         const fetchData = async () => {
             const data = await getPostData();
             console.log(data);
             setPosts(data);
         }
-        await fetchData();
+        fetchData();
     }, [])
     return (
         <View style={styles.container}>
