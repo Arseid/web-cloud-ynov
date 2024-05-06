@@ -3,28 +3,67 @@ import "../../firebaseConfig"
 import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import { useLocalSearchParams } from 'expo-router';
 import { getOnePostData } from "../../firebase/get_one_post_data";
-export default function Post() {
-    const [post, setPost] = useState(null)
+import { getCommentsPost} from "../../firebase/get_comments_post";
+import { createComment } from "../../firebase/add_comment_data";
+import {getAuth} from "firebase/auth";
 
+export default function Post() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const [post, setPost] = useState(null);
+    const [comments, setComments] = useState([]);
+    const [newComment, setNewComment] = useState("");
     const local = useLocalSearchParams();
 
     useEffect(() => {
-        const fetchPost = async () => {
-            let res = await getOnePostData(local.postId);
-            console.log(res);
-            setPost(res);
+        const fetchPostAndComments = async () => {
+            let postData = await getOnePostData(local.postId);
+            setPost(postData);
+            let commentsData = await getCommentsPost(local.postId);
+            setComments(commentsData);
         }
-        fetchPost();
+        fetchPostAndComments();
     }, [local.postId])
 
-    if (post) {
-        return (
-            <View style={styles.container}>
-                <Text>Title : {post.title}</Text>
-                <Text>Text : {post.text}</Text>
-            </View>
-        );
+    const handleCreateComment = async () => {
+        await createComment(newComment, user.displayName || "Anonymous", local.postId);
+        let commentsData = await getCommentsPost(local.postId);
+        setComments(commentsData);
     }
+
+    return (
+        <View style={styles.container}>
+            {post && (
+                <>
+                    <Text>Title : {post.title}</Text>
+                    <Text>Text : {post.text}</Text>
+                    {user && (
+                        <>
+                            <TextInput
+                                style={styles.input}
+                                value={newComment}
+                                onChangeText={setNewComment}
+                                placeholder="Add a comment"
+                            />
+                            <Pressable onPress={handleCreateComment} style={styles.button}>
+                                <Text style={{color: 'white'}}>Post Comment</Text>
+                            </Pressable>
+                        </>
+                    )}
+                    <Text>Comments:</Text>
+                    {comments.map((comment, index) => (
+                        <View key={index} style={styles.comment}>
+                            <Text>{comment.text}</Text>
+                            <Text>By: {comment.createdBy}</Text>
+                            <Text>Date: {comment.date.toDate().toLocaleString()}</Text>
+                        </View>
+                    ))}
+
+                </>
+            )}
+        </View>
+    );
+
 }
 
 const styles = StyleSheet.create({

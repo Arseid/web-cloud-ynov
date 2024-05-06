@@ -65,7 +65,7 @@ export default function Profile() {
                         }}
                     />
 
-                    <View style={{borderTopWidth: 1, borderTopColor: "black", padding: "20px"}}>
+                    <View style={{borderTopWidth: 1, borderTopColor: "black", margin: "20px", padding: "20px"}}>
                         <Text>Modify display name :</Text>
                         <TextInput
                             style={styles.input}
