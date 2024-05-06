@@ -4,6 +4,7 @@ import { createPost } from "../../firebase/add_post_data";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Error403 from "../../components/error403";
 import styles from "./styles";
+import {router} from "expo-router";
 
 export default function NewPost() {
     const [title, setTitle] = useState("");
@@ -22,6 +23,11 @@ export default function NewPost() {
         });
     }, [])
 
+    const handleCreatePost = async () => {
+        await createPost(title, text, user.uid);
+        router.push("/");
+    }
+
     if(user) {
         return (
             <View style={styles.container}>
@@ -39,7 +45,7 @@ export default function NewPost() {
                     multiline={true}
                     numberOfLines={4}
                 />
-                <Pressable onPress={() => createPost(title, text, user.uid)} style={styles.button}>
+                <Pressable onPress={handleCreatePost} style={styles.button}>
                     <Text style={styles.buttonLabel}>Create New Post</Text>
                 </Pressable>
             </View>
