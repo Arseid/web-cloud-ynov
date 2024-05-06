@@ -1,12 +1,11 @@
 import React from "react";
 import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
-import { signup } from "../../firebase/auth_signup_password";
+import { signin } from "../../firebase/auth_signin_password";
 import { signinWithGithub } from "../../firebase/auth_github_signin_popup";
 import { loginWithPhoneNumber } from "../../firebase/auth_phone_signin";
 import { verifyCode } from "../../firebase/auth_phone_verify_code";
 
-export default function Signup() {
-
+export default function Signin() {
     const [email, onChangeEmail] = React.useState("");
     const [password, onChangePassword] = React.useState("");
     const [phoneNumber, onChangePhoneNumber] = React.useState("");
@@ -14,7 +13,6 @@ export default function Signup() {
 
     return (
         <View style={styles.container}>
-            {/* <Toast visible={true}>Thanks for subscribing!</Toast> */}
             <Text>Email</Text>
             <TextInput
                 style={styles.input}
@@ -28,14 +26,13 @@ export default function Signup() {
                 value={password}
                 secureTextEntry={true}
             ></TextInput>
-            <Pressable onPress={() => signup(email, password)} style = {styles.button}>
-                <Text>Sign Up!</Text>
+            <Pressable onPress={() => signin(email, password)} style = {styles.button}>
+                <Text>Sign In!"</Text>
             </Pressable>
             <Text>____Github_____</Text>
             <Pressable onPress={() => signinWithGithub()} style = {styles.button}>
                 <Text>Sign In with Github</Text>
             </Pressable>
-
             <Text>____Phone_____</Text>
             <Text>Phone number</Text>
             <TextInput
