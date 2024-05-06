@@ -2,8 +2,10 @@ import React, {useEffect} from "react";
 import { StyleSheet, Text, View, TextInput, Image, Pressable } from "react-native";
 import { signup } from "../../firebase/auth_signup_password";
 import * as ImagePicker from "expo-image-picker";
-import {getAuth, onAuthStateChanged} from "firebase/auth";
+import {getAuth, onAuthStateChanged, updateProfile} from "firebase/auth";
 import {router} from "expo-router";
+import {uploadToFirebase} from "../../firebase/storage_upload_file";
+import {updateProfileInfo} from "../../firebase/auth_update_profile_info";
 
 export default function Signup() {
     const auth = getAuth();
@@ -11,15 +13,7 @@ export default function Signup() {
     const [password, onChangePassword] = React.useState("");
     const [username, onChangeUsername] = React.useState("");
     const [image, setImage] = React.useState(null);
-    let fileName = "";
-
-    useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                router.push("profile");
-            }
-        });
-    }, [])
+    const [fileName, setFileName] = React.useState("");
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -31,9 +25,8 @@ export default function Signup() {
 
         if (!result.canceled) {
             setImage(result.assets[0].uri);
-
             const { uri } = result.assets[0];
-            fileName = uri.split("/").pop();
+            setFileName(uri.split("/").pop());
         }
     }
 
@@ -57,11 +50,11 @@ export default function Signup() {
 
     const handleSignup = async () => {
         if (validateForm(email, password)) {
-            signup(email, password);
-//            const uploadResp = await uploadToFirebase(image, fileName);
-//            await updateProfile(uploadResp, username)
-//            await updateProfileInfo(uploadResp, username);
+            await signup(email, password);
+            const uploadResp = await uploadToFirebase(image, fileName);
+            await updateProfileInfo(uploadResp, username);
             alert("User created successfully")
+            router.push("profile");
         } else {
             alert("Invalid email or password");
         }

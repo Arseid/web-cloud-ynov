@@ -1,13 +1,16 @@
-import React from "react";
-import { StyleSheet, Text, View, Image, Button } from "react-native";
+import React, {useEffect} from "react";
+import {StyleSheet, Text, View, Image, Pressable, TextInput} from "react-native";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import * as ImagePicker from 'expo-image-picker';
 import { uploadToFirebase } from "../../firebase/storage_upload_file";
-import { updateUserPhotoUrl } from "../../firebase/auth_update_photo_url";
+import { updateProfileInfo } from "../../firebase/auth_update_profile_info";
 
 export default function Profile() {
+    const auth = getAuth();
     const [user, setUser] = React.useState(null)
     const [image, setImage] = React.useState(null);
+    const [username, onChangeUsername] = React.useState("");
+    const [fileName, setFileName] = React.useState("");
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
@@ -20,35 +23,33 @@ export default function Profile() {
 
         if (!result.canceled) {
             setImage(result.assets[0].uri);
-
             const { uri } = result.assets[0];
-            const fileName = uri.split("/").pop();
-            const uploadResp = await uploadToFirebase(uri, fileName);
-            let res = await updateUserPhotoUrl(uploadResp);
-            if (res) {
-                console.log(res);
-                setUser({ ...user, photoURL: uploadResp })
-            } else {
-                // An error occurred
-                // ...
-            }
+            setFileName(uri.split("/").pop());
         }
     };
 
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // User is signed in, see docs for a list of available properties
-            // https://firebase.google.com/docs/reference/js/auth.user
-            console.log(user)
-            setUser(user);
-            // ...
-        } else {
-            // User is signed out
-            // ...
-            setUser(null);
-        }
-    });
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, see docs for a list of available properties
+                // https://firebase.google.com/docs/reference/js/auth.user
+                console.log(user)
+                setUser(user);
+                // ...
+            } else {
+                // User is signed out
+                // ...
+                setUser(null);
+            }
+        });
+    }, []);
+
+    const handleUpdateProfile = async () => {
+        const uploadResp = await uploadToFirebase(image, fileName);
+        await updateProfileInfo(uploadResp, username);
+        setUser({...user, displayName: username, photoURL: uploadResp});
+    }
+
     return (
         <>
             {user ?
@@ -63,8 +64,23 @@ export default function Profile() {
                             uri: user.photoURL,
                         }}
                     />
-                    <Button title="Pick an image from camera roll" onPress={pickImage} />
-                    {image && <Image source={{ uri: image }} style={styles.image} />}
+
+                    <View style={{borderTopWidth: 1, borderTopColor: "black", padding: "20px"}}>
+                        <Text>Modify display name :</Text>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={onChangeUsername}
+                            value={username}
+                        />
+                        <Text>Update profile picture :</Text>
+                        <Pressable onPress={pickImage} style={styles.button}>
+                            <Text>Pick an image from camera roll</Text>
+                        </Pressable>
+                        {image && <Image source={{ uri: image }} style={styles.image} />}
+                        <Pressable onPress={handleUpdateProfile} style={styles.button}>
+                            <Text>Update profile</Text>
+                        </Pressable>
+                    </View>
                 </View>
                 :
                 <View style={styles.container}>
