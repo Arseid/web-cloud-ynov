@@ -40,10 +40,19 @@ export default function Profile() {
     }, []);
 
     const handleUpdateProfile = async () => {
-        const uploadResp = await uploadToFirebase(image, fileName);
-        await updateProfileInfo(uploadResp, username);
-        setUser({...user, displayName: username, photoURL: uploadResp});
-    }
+        let updatedPhotoURL = user.photoURL;
+        let updatedDisplayName = username.trim() !== "" ? username : user.displayName;
+
+        if (image) {
+            updatedPhotoURL = await uploadToFirebase(image, fileName);
+        }
+
+        if (username.trim() !== "" || image) {
+            await updateProfileInfo(updatedPhotoURL, updatedDisplayName);
+            setUser({ ...user, displayName: updatedDisplayName, photoURL: updatedPhotoURL });
+        }
+    };
+
 
     return (
         <>
