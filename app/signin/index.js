@@ -1,15 +1,65 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
 import { signin } from "../../firebase/auth_signin_password";
 import { signinWithGithub } from "../../firebase/auth_github_signin_popup";
 import { loginWithPhoneNumber } from "../../firebase/auth_phone_signin";
 import { verifyCode } from "../../firebase/auth_phone_verify_code";
+import {getAuth, onAuthStateChanged} from "firebase/auth";
+import {router} from "expo-router";
 
 export default function Signin() {
-    const [email, onChangeEmail] = React.useState("");
-    const [password, onChangePassword] = React.useState("");
-    const [phoneNumber, onChangePhoneNumber] = React.useState("");
-    const [code, onChangeCode] = React.useState("");
+    const auth = getAuth();
+    const [email, onChangeEmail] = useState("");
+    const [password, onChangePassword] = useState("");
+    const [phoneNumber, onChangePhoneNumber] = useState("+");
+    const [code, onChangeCode] = useState("");
+
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                router.push("profile");
+            }
+        });
+    }, [])
+
+    const validateEmail = (email) => {
+        const regex = /\S+@\S+\.\S+/;
+        return regex.test(email);
+    };
+
+    const validatePassword = (password) => {
+        return password.length >= 6;
+    };
+
+    const validatePhoneNumber = (phoneNumber) => {
+        const regex = /^\+[1-9]\d{1,14}$/;
+        return regex.test(phoneNumber);
+    }
+
+    const validateForm = (email, password) => {
+        return validateEmail(email) && validatePassword(password);
+    }
+
+    const handleSignin = async () => {
+        if (validateForm(email, password)) {
+            signin(email, password);
+            alert("User signed in successfully")
+        } else {
+            alert("Invalid email or password");
+        }
+    }
+
+    const handleSigninPhone = async () => {
+        if (validatePhoneNumber(phoneNumber)) {
+            await loginWithPhoneNumber(phoneNumber);
+        } else {
+            alert("Invalid phone number");
+        }
+    }
+
+    const handlePhoneCode = async () => {
+        await verifyCode(code);
+    }
 
     return (
         <View style={styles.container}>
@@ -26,7 +76,7 @@ export default function Signin() {
                 value={password}
                 secureTextEntry={true}
             ></TextInput>
-            <Pressable onPress={() => signin(email, password)} style = {styles.button}>
+            <Pressable onPress={handleSignin} style = {styles.button}>
                 <Text>Sign In!"</Text>
             </Pressable>
             <Text>____Github_____</Text>
@@ -40,7 +90,7 @@ export default function Signin() {
                 onChangeText={onChangePhoneNumber}
                 value={phoneNumber}
             ></TextInput>
-            <Pressable id="sign-in-button-phone" onPress={() => loginWithPhoneNumber(phoneNumber)} style = {styles.button}>
+            <Pressable id="sign-in-button-phone" onPress={handleSigninPhone} style = {styles.button}>
                 <Text>Sign In with Phone</Text>
             </Pressable>
             <div id="recaptcha-container"></div>
@@ -50,7 +100,7 @@ export default function Signin() {
                 onChangeText={onChangeCode}
                 value={code}
             ></TextInput>
-            <Pressable onPress={() => verifyCode(code)} style = {styles.button}>
+            <Pressable onPress={handlePhoneCode} style = {styles.button}>
                 <Text>Check Code !</Text>
             </Pressable>
 

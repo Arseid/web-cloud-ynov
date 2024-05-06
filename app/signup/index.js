@@ -1,62 +1,101 @@
-import React from "react";
-import { StyleSheet, Text, View, TextInput, Pressable } from "react-native";
+import React, {useEffect} from "react";
+import { StyleSheet, Text, View, TextInput, Image, Pressable } from "react-native";
 import { signup } from "../../firebase/auth_signup_password";
-import { signinWithGithub } from "../../firebase/auth_github_signin_popup";
-import { loginWithPhoneNumber } from "../../firebase/auth_phone_signin";
-import { verifyCode } from "../../firebase/auth_phone_verify_code";
+import * as ImagePicker from "expo-image-picker";
+import {getAuth, onAuthStateChanged} from "firebase/auth";
+import {router} from "expo-router";
 
 export default function Signup() {
-
+    const auth = getAuth();
     const [email, onChangeEmail] = React.useState("");
     const [password, onChangePassword] = React.useState("");
-    const [phoneNumber, onChangePhoneNumber] = React.useState("");
-    const [code, onChangeCode] = React.useState("");
+    const [username, onChangeUsername] = React.useState("");
+    const [image, setImage] = React.useState(null);
+    let fileName = "";
+
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                router.push("profile");
+            }
+        });
+    }, [])
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+
+            const { uri } = result.assets[0];
+            fileName = uri.split("/").pop();
+        }
+    }
+
+    const validateEmail = (email) => {
+        const regex = /\S+@\S+\.\S+/;
+        return regex.test(email);
+    };
+
+    const validatePassword = (password) => {
+        return password.length >= 6;
+    };
+
+    const validateUsername = (username) => {
+        const regex = /^[a-zA-Z0-9]+$/;
+        return regex.test(username);
+    }
+
+    const validateForm = (email, password) => {
+        return validateEmail(email) && validatePassword(password) && validateUsername(username);
+    }
+
+    const handleSignup = async () => {
+        if (validateForm(email, password)) {
+            signup(email, password);
+//            const uploadResp = await uploadToFirebase(image, fileName);
+//            await updateProfile(uploadResp, username)
+//            await updateProfileInfo(uploadResp, username);
+            alert("User created successfully")
+        } else {
+            alert("Invalid email or password");
+        }
+    };
 
     return (
         <View style={styles.container}>
-            {/* <Toast visible={true}>Thanks for subscribing!</Toast> */}
             <Text>Email</Text>
             <TextInput
                 style={styles.input}
                 onChangeText={onChangeEmail}
                 value={email}
-            ></TextInput>
+            />
             <Text>Password</Text>
             <TextInput
                 style={styles.input}
                 onChangeText={onChangePassword}
                 value={password}
                 secureTextEntry={true}
-            ></TextInput>
-            <Pressable onPress={() => signup(email, password)} style = {styles.button}>
+            />
+            <Text>Username</Text>
+            <TextInput
+                style={styles.input}
+                onChangeText={onChangeUsername}
+                value={username}
+            />
+            <Text>Profile picture (optional)</Text>
+            <Pressable onPress={pickImage} style={styles.button}>
+                <Text>Choose Image</Text>
+            </Pressable>
+            {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+            <Pressable onPress={handleSignup} style = {styles.button}>
                 <Text>Sign Up!</Text>
             </Pressable>
-            <Text>____Github_____</Text>
-            <Pressable onPress={() => signinWithGithub()} style = {styles.button}>
-                <Text>Sign In with Github</Text>
-            </Pressable>
-
-            <Text>____Phone_____</Text>
-            <Text>Phone number</Text>
-            <TextInput
-                style={styles.input}
-                onChangeText={onChangePhoneNumber}
-                value={phoneNumber}
-            ></TextInput>
-            <Pressable id="sign-in-button-phone" onPress={() => loginWithPhoneNumber(phoneNumber)} style = {styles.button}>
-                <Text>Sign In with Phone</Text>
-            </Pressable>
-            <div id="recaptcha-container"></div>
-            <Text>Code</Text>
-            <TextInput
-                style={styles.input}
-                onChangeText={onChangeCode}
-                value={code}
-            ></TextInput>
-            <Pressable onPress={() => verifyCode(code)} style = {styles.button}>
-                <Text>Check Code !</Text>
-            </Pressable>
-
         </View>
     );
 }

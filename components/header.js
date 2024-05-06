@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import "../firebaseConfig"
 import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet, Text, View, Pressable } from 'react-native';
-import { Link } from 'expo-router';
+import {Link, router} from 'expo-router';
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 export default function Header() {
@@ -25,7 +25,9 @@ export default function Header() {
     }, [])
 
     const logout = () => {
-        signOut(auth)
+        signOut(auth).then(() => {
+            router.push("signin");
+        });
     }
     return (
         <NavigationContainer independent={true}>
