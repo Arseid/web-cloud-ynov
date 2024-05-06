@@ -74,11 +74,11 @@ export default function Profile() {
                         />
                         <Text>Update profile picture :</Text>
                         <Pressable onPress={pickImage} style={styles.button}>
-                            <Text>Pick an image from camera roll</Text>
+                            <Text style={{color: 'white'}}>Pick an image from camera roll</Text>
                         </Pressable>
                         {image && <Image source={{ uri: image }} style={styles.image} />}
                         <Pressable onPress={handleUpdateProfile} style={styles.button}>
-                            <Text>Update profile</Text>
+                            <Text style={{color: 'white'}}>Update profile</Text>
                         </Pressable>
                     </View>
                 </View>

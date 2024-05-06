@@ -83,11 +83,11 @@ export default function Signup() {
             />
             <Text>Profile picture (optional)</Text>
             <Pressable onPress={pickImage} style={styles.button}>
-                <Text>Choose Image</Text>
+                <Text style={{color: 'white'}}>Choose Image</Text>
             </Pressable>
             {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
             <Pressable onPress={handleSignup} style = {styles.button}>
-                <Text>Sign Up!</Text>
+                <Text style={{color: 'white'}}>Sign Up!</Text>
             </Pressable>
         </View>
     );

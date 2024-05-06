@@ -43,7 +43,7 @@ export default function NewPost() {
                     value={text}
                 ></TextInput>
                 <Pressable onPress={() => createPost(title, text, user.uid)} style = {styles.button}>
-                    <Text>Create new post</Text>
+                    <Text style={{color: 'white'}}>Create new post</Text>
                 </Pressable>
             </View>
         );

@@ -77,11 +77,11 @@ export default function Signin() {
                 secureTextEntry={true}
             ></TextInput>
             <Pressable onPress={handleSignin} style = {styles.button}>
-                <Text>Sign In!"</Text>
+                <Text style={{color: 'white'}}>Sign In!"</Text>
             </Pressable>
             <Text>____Github_____</Text>
             <Pressable onPress={() => signinWithGithub()} style = {styles.button}>
-                <Text>Sign In with Github</Text>
+                <Text style={{color: 'white'}}>Sign In with Github</Text>
             </Pressable>
             <Text>____Phone_____</Text>
             <Text>Phone number</Text>
@@ -91,7 +91,7 @@ export default function Signin() {
                 value={phoneNumber}
             ></TextInput>
             <Pressable id="sign-in-button-phone" onPress={handleSigninPhone} style = {styles.button}>
-                <Text>Sign In with Phone</Text>
+                <Text style={{color: 'white'}}>Sign In with Phone</Text>
             </Pressable>
             <div id="recaptcha-container"></div>
             <Text>Code</Text>
@@ -101,7 +101,7 @@ export default function Signin() {
                 value={code}
             ></TextInput>
             <Pressable onPress={handlePhoneCode} style = {styles.button}>
-                <Text>Check Code !</Text>
+                <Text style={{color: 'white'}}>Check Code !</Text>
             </Pressable>
 
         </View>
